@@ -19,12 +19,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.greetingcard.ui.theme.GreetingCardTheme
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 
 
 class MainActivity : ComponentActivity() {
@@ -35,11 +39,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             GreetingCardTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    GreetingText(
-                        message = "Happy Birthday Sam!",
-                        from = "From Emma!",
-                        modifier = Modifier.padding(8.dp)
-
+                    GreetingImage(
+                        message = stringResource(R.string.happy_birthday_text),
+                        from = stringResource(R.string.signature_text),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxSize()
                     )
                 }
             }
@@ -60,10 +65,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 }*/
 @Composable
 fun GreetingText(message: String, from: String, modifier: Modifier = Modifier) {
-    Surface(
-        color = Color.White,
-        modifier = Modifier.fillMaxSize()
-    ) {
         Column(
             verticalArrangement = Arrangement.Center,
             modifier = modifier.padding(8.dp)
@@ -80,10 +81,29 @@ fun GreetingText(message: String, from: String, modifier: Modifier = Modifier) {
                 color = Color.Red,
                 modifier = Modifier
                     .padding(8.dp)
-                    .align(alignment = Alignment.End)
+                    .align(alignment = Alignment.CenterHorizontally)
             )
         }
 
+
+}
+@Composable
+fun GreetingImage(message: String, from: String, modifier: Modifier = Modifier) {
+    val image = painterResource(R.drawable.androidparty)
+    Box(modifier) {
+        Image(
+            painter = image,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            alpha = 0.8f
+        )
+        GreetingText(
+            message = message,
+            from = from,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+        )
     }
 }
 
@@ -91,6 +111,9 @@ fun GreetingText(message: String, from: String, modifier: Modifier = Modifier) {
 @Composable
 fun BirthdayCardPreview() {
     GreetingCardTheme {
-        GreetingText(message = "Happy bd sam!", from = "From hege!")
+        GreetingImage(
+            message = stringResource(R.string.happy_birthday_text),
+            from = stringResource(R.string.signature_text)
+        )
     }
 }
