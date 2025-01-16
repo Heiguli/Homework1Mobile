@@ -2,6 +2,7 @@ package com.example.greetingcard
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.ScrollView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -27,6 +28,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.greetingcard.ui.theme.GreetingCardTheme
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 
@@ -40,8 +56,9 @@ class MainActivity : ComponentActivity() {
             GreetingCardTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
                     GreetingImage(
-                        message = stringResource(R.string.happy_birthday_text),
-                        from = stringResource(R.string.signature_text),
+                        headline = stringResource(R.string.headline_text),
+                        message = stringResource(R.string.shorter_text),
+                        from = stringResource(R.string.app_info_text),
                         modifier = Modifier
                             .padding(8.dp)
                             .fillMaxSize()
@@ -64,46 +81,91 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 }*/
 @Composable
-fun GreetingText(message: String, from: String, modifier: Modifier = Modifier) {
-        Column(
+fun justTrying() {
+    Text(
+        text = "Button",
+        fontSize = 25.sp,
+        color = Color.Red,
+        textAlign = TextAlign.End
+    )
+}
+
+@Composable
+fun GreetingText(headline : String, message: String, from: String, modifier: Modifier = Modifier) {
+    Column(
             verticalArrangement = Arrangement.Center,
-            modifier = modifier.padding(8.dp)
+            modifier = modifier.padding(40.dp)
         ) {
             Text(
+                text = headline,
+                fontSize = 24.sp,
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                
+            )
+            Text(
                 text = message,
-                textAlign = TextAlign.Center,
-                fontSize = 100.sp,
-                lineHeight = 80.sp
+                textAlign = TextAlign.Justify,
+                fontSize = 15.sp,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .background(color = Color.White)
             )
             Text(
                 text = from,
-                fontSize = 36.sp,
-                color = Color.Red,
+                fontSize = 15.sp,
                 modifier = Modifier
-                    .padding(8.dp)
                     .align(alignment = Alignment.CenterHorizontally)
+                    .background(color = Color.White)
             )
+
         }
 
 
 }
 @Composable
-fun GreetingImage(message: String, from: String, modifier: Modifier = Modifier) {
-    val image = painterResource(R.drawable.androidparty)
-    Box(modifier) {
+fun GreetingImage(headline: String, message: String, from: String, modifier: Modifier = Modifier) {
+    var numeroVaihtuva by remember { mutableStateOf(1) }
+    val image = when (numeroVaihtuva) {
+        1 -> R.drawable.yoyo
+        else -> R.drawable.bg_compose_background
+    }
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 40.dp)
+            .background(color = Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+
+        ) {
         Image(
-            painter = image,
+            painter = painterResource(image),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
-            alpha = 0.8f
+            alpha = 0.8f,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
         )
+        Spacer(modifier = Modifier.height(40.dp))
+        Button(onClick = { numeroVaihtuva = 2 }) {
+            Text(
+                text = "change",
+                fontSize = 25.sp,
+                color = Color.LightGray,
+            )
+            Alignment.Center
+
+        }
         GreetingText(
+            headline = headline,
             message = message,
             from = from,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
+                // .padding(8.dp)
+                .background(color = Color.White)
         )
+        Text(text = stringResource(R.string.last_messagee))
     }
 }
 
@@ -112,8 +174,9 @@ fun GreetingImage(message: String, from: String, modifier: Modifier = Modifier) 
 fun BirthdayCardPreview() {
     GreetingCardTheme {
         GreetingImage(
-            message = stringResource(R.string.happy_birthday_text),
-            from = stringResource(R.string.signature_text)
+            headline = stringResource(R.string.headline_text),
+            message = stringResource(R.string.shorter_text),
+            from = stringResource(R.string.app_info_text)
         )
     }
 }
